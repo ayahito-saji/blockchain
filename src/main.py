@@ -11,6 +11,18 @@ class Blockchain:
 
         self.new_block(previous_hash=1, proof=100)
 
+    def proof_of_work(self, last_proof):
+        """
+        Simple proof of work system
+        :param last_proof: <int>
+        :return: <int>
+        """
+        proof = 0
+        while self.valid_proof(last_proof, proof) is False:
+            proof += 1
+
+        return proof
+
     def new_block(self, proof, previous_hash=None):
         """
         create new block and push chain
@@ -45,6 +57,18 @@ class Blockchain:
         return self.last_block['index'] + 1
 
     @staticmethod
+    def valid_proof(last_proof, proof):
+        """
+        :param last_proof: <int> last proof
+        :param proof: <int> current proof
+        :return: <bool> current proof is valid ?
+        """
+
+        guess = (str(last_proof)+str(proof)).encode()
+        guess_hash = hashlib.sha256(guess).hexdigest()
+        return guess_hash[:4] == "0000"
+
+    @staticmethod
     def hash(block):
         """
         hash block
@@ -66,4 +90,4 @@ if __name__ == "__main__":
     blockchain = Blockchain()
     print(blockchain.new_transaction("Taro", "Jiro", 3))
     print(blockchain.current_transactions)
-    print(blockchain.new_block(proof=1))
+    print(blockchain.proof_of_work(blockchain.last_block['proof']))
