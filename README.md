@@ -1,3 +1,3 @@
 # Blockchain
 
-implemented by Python
+implemented in Python.
